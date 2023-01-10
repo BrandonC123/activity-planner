@@ -7,7 +7,14 @@ module.exports = {
         "./src/**/*.tsx",
     ],
     theme: {
-        extend: {},
+        extend: {
+            backgroundImage: {
+                "landing-page": "url('/src/img/bg.png')",
+            },
+            translate: {
+                "vert-cent": "transform: translateY(-50%)",
+            },
+        },
     },
     plugins: [],
 };
