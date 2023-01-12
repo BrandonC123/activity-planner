@@ -1,13 +1,31 @@
 import { useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-const AddExercise = ({}) => {
+interface IAddExercise {
+    addExercise: Function;
+}
+
+interface Exercise {
+    name: String;
+    sets: Number;
+    reps: Number;
+    weight: Number[];
+    dropset: Boolean;
+}
+
+const AddExercise = ({ addExercise }: IAddExercise) => {
+    const [name, setName] = useState<String>("");
+    const [sets, setSets] = useState<Number>(0);
+    const [reps, setReps] = useState<Number>(0);
+    const [weight, setWeight] = useState<Number[]>([]);
+    const [dropset, setDropset] = useState<Boolean>(false);
+
     function fillExerciseDropDown() {
         return exerciseArray.map((exercise, index) => {
             return <MenuItem value={index}>{exercise}</MenuItem>;
@@ -34,6 +52,9 @@ const AddExercise = ({}) => {
             <FormControl fullWidth>
                 <InputLabel id="select-exercise-label">Exercise</InputLabel>
                 <Select
+                    onChange={(e: SelectChangeEvent<String>) => {
+                        setName(e.target.value);
+                    }}
                     labelId="select-exercise-label"
                     id="select-exercise"
                     label="Exercise"
@@ -45,6 +66,11 @@ const AddExercise = ({}) => {
                 <div className="flex gap-2">
                     <FormControl fullWidth>
                         <TextField
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                                setSets(Number.parseInt(e.target.value));
+                            }}
                             id="set-count"
                             type={"number"}
                             defaultValue={1}
@@ -53,6 +79,11 @@ const AddExercise = ({}) => {
                     </FormControl>
                     <FormControl fullWidth>
                         <TextField
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                                setReps(Number.parseInt(e.target.value));
+                            }}
                             id="rep-count"
                             type={"number"}
                             defaultValue={1}
@@ -63,6 +94,9 @@ const AddExercise = ({}) => {
                 <div className="flex gap-2">
                     <FormControl fullWidth>
                         <TextField
+                            onChange={(e) => {
+                                // setWeight(Number.parseInt(e.target.value));
+                            }}
                             id="weight"
                             type={"number"}
                             label="Weight"
@@ -70,6 +104,14 @@ const AddExercise = ({}) => {
                     </FormControl>
                     <FormControl fullWidth>
                         <TextField
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                                const dropsetStatus: Boolean = JSON.parse(
+                                    e.target.value
+                                );
+                                setDropset(dropsetStatus);
+                            }}
                             id="dropset-status"
                             type={"checkbox"}
                             label="Dropset?"
