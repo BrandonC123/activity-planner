@@ -26,7 +26,7 @@ const Calendar = ({}) => {
     function displayDays() {
         let test: JSX.Element[] = [];
         for (let i = 1; i <= days; i++) {
-            test.push(<Day key={i} dateInfo={i} />);
+            test.push(<Day key={i} dateInfo={new Date(year, month, i)} />);
         }
         return test;
     }
@@ -37,13 +37,22 @@ const Calendar = ({}) => {
         setYear(today.getFullYear());
     }
     function advanceCalendar(forward: boolean) {
+        let tempMonth: number = month;
         if (forward) {
-            setMonth(month + 1);
-            setDays(getDaysInMonth(new Date(year, month + 1)));
+            tempMonth++;
+            if (tempMonth === 12) {
+                tempMonth = 0;
+                setYear(year + 1);
+            }
         } else {
-            setMonth(month - 1);
-            setDays(getDaysInMonth(new Date(year, month - 1)));
+            tempMonth--;
+            if (tempMonth === -1) {
+                tempMonth = 11;
+                setYear(year - 1);
+            }
         }
+        setMonth(tempMonth);
+        setDays(getDaysInMonth(new Date(year, tempMonth)));
     }
     useEffect(() => {
         setCurrentDate();
@@ -63,7 +72,7 @@ const Calendar = ({}) => {
                     <ArrowBackIosIcon />
                 </Button>
                 <span>
-                    {months[month]} {year}{" "}
+                    {months[month]} {year}
                 </span>
                 <Button
                     onClick={() => {

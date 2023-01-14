@@ -7,26 +7,17 @@ import {
     TextField,
 } from "@mui/material";
 import CreateWorkout from "./CreateWorkout";
-
-interface DayProps {
-    dateInfo: Number;
+interface IDay {
+    dateInfo: Date;
 }
 
-interface Exercise {
-    name: String;
-    sets: Number;
-    reps: Number;
-    weight: Number[];
-    dropset: Boolean;
-}
-
-const Day = ({ dateInfo }: DayProps) => {
+const Day = ({ dateInfo }: IDay) => {
     const [openCreate, setOpenCreate] = useState(false);
-    const [exercises, setExercises] = useState([]);
+
     return (
         <>
             <button onClick={() => setOpenCreate(true)} className="text-center">
-                {dateInfo.toString()}
+                {dateInfo.getUTCDate()}
             </button>
             <Dialog
                 fullWidth
@@ -35,7 +26,7 @@ const Day = ({ dateInfo }: DayProps) => {
             >
                 <DialogContent>
                     <span className="text-3xl">Create new Workout</span>
-                    <CreateWorkout />
+                    <CreateWorkout dateInfo={dateInfo} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenCreate(false)}>Cancel</Button>

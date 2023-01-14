@@ -1,8 +1,6 @@
+import { useEffect } from "react";
 import { Button, TextField } from "@mui/material";
 import { useState } from "react";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import AddExercise from "./AddExercise";
@@ -10,31 +8,49 @@ import FormLabel from "@mui/material/FormLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
+import { IExercise } from "../interfaces/IExercise";
 
-const CreateWorkout = ({}) => {
-    const [date, setDate] = useState("");
+interface ICreateWorkout {
+    dateInfo: Date;
+}
+
+const CreateWorkout = ({ dateInfo }: ICreateWorkout) => {
+    const [date, setDate] = useState<string>();
     const [type, setType] = useState("");
     const [setting, setSetting] = useState("");
-    const [start, setStart] = useState("");
-    const [end, setEnd] = useState("");
-    const exerciseArray: String[] = [
-        "Push ups",
-        "Pull ups",
-        "Squats",
-        "Lateral Raise",
-        "Lat pull down",
-        "Calf Raise",
-        "Bicep Curl",
-    ];
+    const [start, setStart] = useState(""); // TODO: start now
+    const [exercises, setExercises] = useState<IExercise[]>([]);
+
+    function addExercise(exercise: IExercise) {
+        setExercises([...exercises, exercise]);
+    }
+    useEffect(() => {
+        if (dateInfo) {
+            let temp = dateInfo;
+            const offset = temp.getTimezoneOffset();
+            temp = new Date(temp.getTime() - offset * 60 * 1000);
+            setDate(temp.toISOString().split("T")[0]);
+        }
+    }, []);
 
     return (
         <form className="text-black bg-grey flex flex-col gap-2">
             <FormControl>
-                <TextField type={"date"} />
+                <TextField
+                    onChange={(e) => {
+                        setDate(e.target.value);
+                    }}
+                    type={"date"}
+                    value={date}
+                />
             </FormControl>
             <FormControl fullWidth>
                 <FormLabel>Type</FormLabel>
-                <RadioGroup>
+                <RadioGroup
+                    onChange={(e) => {
+                        setType(e.target.value);
+                    }}
+                >
                     <FormControlLabel
                         value="weight-lifting"
                         label="Weight Lifting"
@@ -49,7 +65,11 @@ const CreateWorkout = ({}) => {
             </FormControl>
             <FormControl fullWidth>
                 <FormLabel>Setting</FormLabel>
-                <RadioGroup>
+                <RadioGroup
+                    onChange={(e) => {
+                        setSetting(e.target.value);
+                    }}
+                >
                     <FormControlLabel
                         value="home"
                         label="Home"
@@ -62,7 +82,7 @@ const CreateWorkout = ({}) => {
                     />
                 </RadioGroup>
             </FormControl>
-            <AddExercise />
+            <AddExercise addExercise={addExercise} />
         </form>
     );
 };
