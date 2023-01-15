@@ -13,7 +13,7 @@ interface IAddExercise {
 
 const AddExercise = ({ addExercise }: IAddExercise) => {
     const [finished, setFinished] = useState<boolean>(false);
-    const [nameIndex, setNameIndex] = useState<number>(0);
+    const [nameIndex, setNameIndex] = useState<string>("");
     const [sets, setSets] = useState<number>(1);
     const [reps, setReps] = useState<number>(1);
     const [weight, setWeight] = useState<string>("");
@@ -38,19 +38,14 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
         });
     }
 
-    return (
+    return !finished ? (
         <>
-            {" "}
             <FormControl fullWidth>
                 <InputLabel id="select-exercise-label">Exercise</InputLabel>
                 <Select
                     value={nameIndex}
-                    onChange={(e: SelectChangeEvent<number>) => {
-                        const tempIndex: number = Number.parseInt(
-                            e.target.name
-                        );
-                        console.log(e.target.name);
-                        setNameIndex(tempIndex);
+                    onChange={(e: SelectChangeEvent<string>) => {
+                        setNameIndex(e.target.value);
                     }}
                     labelId="select-exercise-label"
                     id="select-exercise"
@@ -73,6 +68,7 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                                 );
                                 setSets(tempSets);
                             }}
+                            InputProps={{ inputProps: { min: 1 } }}
                         />
                     </FormControl>
                     <FormControl fullWidth>
@@ -86,6 +82,7 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                             type={"number"}
                             value={reps}
                             label="Reps"
+                            InputProps={{ inputProps: { min: 1 } }}
                         />
                     </FormControl>
                 </div>
@@ -96,7 +93,7 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                                 setWeight(e.target.value);
                             }}
                             id="weight"
-                            type={"number"}
+                            type={"text"}
                             value={weight}
                             label="Weight"
                         />
@@ -119,13 +116,15 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
             <Button
                 onClick={() => {
                     const tempExercise: IExercise = {
-                        name: exerciseArray[nameIndex],
+                        name: exerciseArray[Number.parseInt(nameIndex)],
                         sets,
                         reps,
                         weight,
                         dropset,
                     };
                     console.log(tempExercise);
+                    addExercise(tempExercise);
+                    setFinished(true);
                 }}
                 type="button"
             >
@@ -133,6 +132,13 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
             </Button>
             <Button onClick={() => console.log()}>Remove</Button>
         </>
+    ) : (
+        <div>
+            <p>
+                {exerciseArray[Number.parseInt(nameIndex)]} {sets} {reps}{" "}
+                {weight} {dropset}
+            </p>
+        </div>
     );
 };
 
