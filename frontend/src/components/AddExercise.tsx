@@ -1,37 +1,25 @@
-import { useState } from "react";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { useState, useEffect } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { IExercise } from "../interfaces/IExercise";
 
 interface IAddExercise {
     addExercise: Function;
 }
 
-interface Exercise {
-    name: String;
-    sets: Number;
-    reps: Number;
-    weight: Number[];
-    dropset: Boolean;
-}
-
 const AddExercise = ({ addExercise }: IAddExercise) => {
-    const [name, setName] = useState<String>("");
-    const [sets, setSets] = useState<Number>(0);
-    const [reps, setReps] = useState<Number>(0);
-    const [weight, setWeight] = useState<Number[]>([]);
-    const [dropset, setDropset] = useState<Boolean>(false);
-
-    function fillExerciseDropDown() {
-        return exerciseArray.map((exercise, index) => {
-            return <MenuItem value={index}>{exercise}</MenuItem>;
-        });
-    }
-    const exerciseArray: String[] = [
+    const [finished, setFinished] = useState<boolean>(false);
+    const [nameIndex, setNameIndex] = useState<number>(0);
+    const [sets, setSets] = useState<number>(1);
+    const [reps, setReps] = useState<number>(1);
+    const [weight, setWeight] = useState<string>("");
+    const [dropset, setDropset] = useState<boolean>(false);
+    const exerciseArray: string[] = [
+        "",
         "Push ups",
         "Pull ups",
         "Squats",
@@ -40,20 +28,29 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
         "Calf Raise",
         "Bicep Curl",
     ];
+    function fillExerciseDropDown() {
+        return exerciseArray.map((exercise, index) => {
+            return (
+                <MenuItem key={index} value={index}>
+                    {exercise}
+                </MenuItem>
+            );
+        });
+    }
+
     return (
         <>
             {" "}
-            <h3>
-                Add exercises{" "}
-                <button type="button">
-                    <AddCircleOutlineIcon />
-                </button>
-            </h3>
             <FormControl fullWidth>
                 <InputLabel id="select-exercise-label">Exercise</InputLabel>
                 <Select
-                    onChange={(e: SelectChangeEvent<String>) => {
-                        setName(e.target.value);
+                    value={nameIndex}
+                    onChange={(e: SelectChangeEvent<number>) => {
+                        const tempIndex: number = Number.parseInt(
+                            e.target.name
+                        );
+                        console.log(e.target.name);
+                        setNameIndex(tempIndex);
                     }}
                     labelId="select-exercise-label"
                     id="select-exercise"
@@ -66,15 +63,16 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                 <div className="flex gap-2">
                     <FormControl fullWidth>
                         <TextField
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>
-                            ) => {
-                                setSets(Number.parseInt(e.target.value));
-                            }}
                             id="set-count"
                             type={"number"}
-                            defaultValue={1}
                             label="Sets"
+                            value={sets}
+                            onChange={(e) => {
+                                const tempSets: number = Number.parseInt(
+                                    e.target.value
+                                );
+                                setSets(tempSets);
+                            }}
                         />
                     </FormControl>
                     <FormControl fullWidth>
@@ -86,7 +84,7 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                             }}
                             id="rep-count"
                             type={"number"}
-                            defaultValue={1}
+                            value={reps}
                             label="Reps"
                         />
                     </FormControl>
@@ -95,10 +93,11 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                     <FormControl fullWidth>
                         <TextField
                             onChange={(e) => {
-                                // setWeight(Number.parseInt(e.target.value));
+                                setWeight(e.target.value);
                             }}
                             id="weight"
                             type={"number"}
+                            value={weight}
                             label="Weight"
                         />
                     </FormControl>
@@ -107,19 +106,32 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                             onChange={(
                                 e: React.ChangeEvent<HTMLInputElement>
                             ) => {
-                                const dropsetStatus: Boolean = JSON.parse(
-                                    e.target.value
-                                );
-                                setDropset(dropsetStatus);
+                                setDropset(e.target.checked);
                             }}
                             id="dropset-status"
                             type={"checkbox"}
+                            value={dropset}
                             label="Dropset?"
                         />
                     </FormControl>
                 </div>
             </div>
-            <Button>Add</Button>
+            <Button
+                onClick={() => {
+                    const tempExercise: IExercise = {
+                        name: exerciseArray[nameIndex],
+                        sets,
+                        reps,
+                        weight,
+                        dropset,
+                    };
+                    console.log(tempExercise);
+                }}
+                type="button"
+            >
+                Add
+            </Button>
+            <Button onClick={() => console.log()}>Remove</Button>
         </>
     );
 };

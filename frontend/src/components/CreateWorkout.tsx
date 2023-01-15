@@ -3,6 +3,7 @@ import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AddExercise from "./AddExercise";
 import FormLabel from "@mui/material/FormLabel";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -15,9 +16,10 @@ interface ICreateWorkout {
 }
 
 const CreateWorkout = ({ dateInfo }: ICreateWorkout) => {
+    const [exerciseDisplay, setExerciseDisplay] = useState<JSX.Element[]>([]);
     const [date, setDate] = useState<string>();
-    const [type, setType] = useState("");
-    const [setting, setSetting] = useState("");
+    const [type, setType] = useState<string>("");
+    const [setting, setSetting] = useState<string>("");
     const [start, setStart] = useState(""); // TODO: start now
     const [exercises, setExercises] = useState<IExercise[]>([]);
 
@@ -32,6 +34,12 @@ const CreateWorkout = ({ dateInfo }: ICreateWorkout) => {
             setDate(temp.toISOString().split("T")[0]);
         }
     }, []);
+    function addFormToDisplay() {
+        setExerciseDisplay([
+            ...exerciseDisplay,
+            <AddExercise addExercise={addExercise} />,
+        ]);
+    }
 
     return (
         <form className="text-black bg-grey flex flex-col gap-2">
@@ -82,7 +90,13 @@ const CreateWorkout = ({ dateInfo }: ICreateWorkout) => {
                     />
                 </RadioGroup>
             </FormControl>
-            <AddExercise addExercise={addExercise} />
+            <h3>
+                Add exercises{" "}
+                <button onClick={() => addFormToDisplay()} type="button">
+                    <AddCircleOutlineIcon />
+                </button>
+            </h3>
+            {exerciseDisplay}
         </form>
     );
 };

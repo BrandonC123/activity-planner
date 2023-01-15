@@ -12,11 +12,14 @@ interface IDay {
 }
 
 const Day = ({ dateInfo }: IDay) => {
-    const [openCreate, setOpenCreate] = useState(false);
+    const [openCreate, setOpenCreate] = useState(true);
 
     return (
         <>
-            <button onClick={() => setOpenCreate(true)} className="text-center">
+            <button
+                onClick={() => setOpenCreate(true)}
+                className="text-center hover:bg-sky-700 rounded"
+            >
                 {dateInfo.getUTCDate()}
             </button>
             <Dialog
