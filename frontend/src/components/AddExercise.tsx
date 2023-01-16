@@ -16,7 +16,7 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
     const [nameIndex, setNameIndex] = useState<string>("");
     const [sets, setSets] = useState<number>(1);
     const [reps, setReps] = useState<number>(1);
-    const [weight, setWeight] = useState<string>("");
+    const [weight, setWeight] = useState<number[]>([1]);
     const [dropset, setDropset] = useState<boolean>(false);
     const exerciseArray: string[] = [
         "",
@@ -67,6 +67,11 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                                     e.target.value
                                 );
                                 setSets(tempSets);
+                                let temp: number[] = [];
+                                for (let i = 0; i < sets; i++) {
+                                    temp.push(1);
+                                }
+                                setWeight(temp);
                             }}
                             InputProps={{ inputProps: { min: 1 } }}
                         />
@@ -87,16 +92,26 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                     </FormControl>
                 </div>
                 <div className="flex gap-2">
-                    <FormControl fullWidth>
-                        <TextField
-                            onChange={(e) => {
-                                setWeight(e.target.value);
-                            }}
-                            id="weight"
-                            type={"text"}
-                            value={weight}
-                            label="Weight"
-                        />
+                    <FormControl className="flex flex-col gap-2" fullWidth>
+                        {weight.map((set, index) => {
+                            return (
+                                <TextField
+                                    onChange={(e) => {
+                                        let tempWeight: number[] =
+                                            Array.from(weight);
+                                        tempWeight[index] = Number.parseInt(
+                                            e.target.value
+                                        );
+                                        setWeight(tempWeight);
+                                    }}
+                                    id="weight"
+                                    type={"number"}
+                                    value={weight[index]}
+                                    // Use +2 to account for initial set already in array
+                                    label={`Set ${index + 1} Weight`}
+                                />
+                            );
+                        })}
                     </FormControl>
                     <FormControl fullWidth>
                         <TextField
@@ -135,8 +150,9 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
     ) : (
         <div>
             <p>
-                {exerciseArray[Number.parseInt(nameIndex)]} {sets} {reps}{" "}
-                {weight} {dropset}
+                Exercise: {exerciseArray[Number.parseInt(nameIndex)]} Sets:{" "}
+                {sets} Reps: {reps}
+                Weight: {weight} Dropset: {dropset}
             </p>
         </div>
     );

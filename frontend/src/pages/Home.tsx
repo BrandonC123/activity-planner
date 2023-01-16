@@ -1,11 +1,9 @@
-import WeekSidebar from "../components/WeekSidebar";
+import AuthenticatedHome from "./AuthenticatedHome";
+import UnauthenticatedHome from "./UnauthenticatedHome";
 
 const Home = ({}) => {
-    return (
-        <div className="test">
-            <WeekSidebar />
-        </div>
-    );
+    const signedIn = true;
+    return signedIn ? <AuthenticatedHome /> : <UnauthenticatedHome />;
 };
 
 export default Home;
