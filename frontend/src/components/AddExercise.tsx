@@ -68,7 +68,7 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                                 );
                                 setSets(tempSets);
                                 let temp: number[] = [];
-                                for (let i = 0; i < sets; i++) {
+                                for (let i = 0; i < tempSets; i++) {
                                     temp.push(1);
                                 }
                                 setWeight(temp);
