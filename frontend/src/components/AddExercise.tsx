@@ -67,8 +67,13 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                                     e.target.value
                                 );
                                 setSets(tempSets);
-                                let temp: number[] = [];
-                                for (let i = 0; i < tempSets; i++) {
+                                let temp: number[] = Array.from(weight);
+                                if (tempSets < weight.length) {
+                                    temp.splice(tempSets);
+                                    setWeight(temp);
+                                    return;
+                                }
+                                for (let i = weight.length; i < tempSets; i++) {
                                     temp.push(1);
                                 }
                                 setWeight(temp);
@@ -104,6 +109,7 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                                         );
                                         setWeight(tempWeight);
                                     }}
+                                    key={index}
                                     id="weight"
                                     type={"number"}
                                     value={weight[index]}

@@ -19,7 +19,22 @@ describe("adding a exercise", () => {
         const weightInput1 = screen.getByLabelText("Set 1 Weight");
         expect(weightInput1).toBeInTheDocument();
 
-        const weightInput2 = await screen.findByLabelText("Set 6 Weight");
+        const weightInput2 = screen.getByLabelText("Set 6 Weight");
         expect(weightInput2).toBeInTheDocument();
+    });
+    test("weight inputs do not change when sets are changed", () => {
+        render(<AddExercise />);
+        const setsInput = screen.getByLabelText("Sets");
+        const weightInput1 = screen.getByLabelText("Set 1 Weight");
+
+        // Increasing sets
+        fireEvent.change(weightInput1, { target: { value: 150 } });
+        expect(Number.parseInt(weightInput1.value)).toBe(150);
+        fireEvent.change(setsInput, { target: { value: 2 } });
+        expect(Number.parseInt(weightInput1.value)).toBe(150);
+
+        //Decreasing sets
+        fireEvent.change(setsInput, { target: { value: 1 } });
+        expect(Number.parseInt(weightInput1.value)).toBe(150);
     });
 });
