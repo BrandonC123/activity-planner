@@ -10,6 +10,8 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import { IExercise } from "../interfaces/IExercise";
+import WorkoutTag from "./WorkoutTag";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 interface ICreateWorkout {
     dateInfo: Date;
@@ -22,6 +24,8 @@ const CreateWorkout = ({ dateInfo }: ICreateWorkout) => {
     const [setting, setSetting] = useState<string>("");
     const [start, setStart] = useState(""); // TODO: start now
     const [exercises, setExercises] = useState<IExercise[]>([]);
+    const [tags, setTags] = useState<string[]>([]);
+    const [tagDisplay, setTagDisplay] = useState<JSX.Element[]>([]);
 
     function addExercise(exercise: IExercise) {
         setExercises([...exercises, exercise]);
@@ -40,9 +44,51 @@ const CreateWorkout = ({ dateInfo }: ICreateWorkout) => {
             <AddExercise addExercise={addExercise} />,
         ]);
     }
-
+    const tagArray: string[] = [
+        "Push",
+        "Pull",
+        "Legs",
+        "Chest",
+        "Full body",
+        "Upper",
+        "Lower",
+        "Arms",
+        "Accesory",
+        "Deload",
+        "Back",
+    ];
+    function addTagToArray(text: string, index: number) {
+        setTags([...tags, text]);
+        console.log(text);
+        setTagDisplay([
+            ...tagDisplay,
+            <div>
+                {text}{" "}
+                <Button
+                    onClick={() => {
+                        console.log(index);
+                    }}
+                >
+                    <DeleteForeverIcon />
+                </Button>
+            </div>,
+        ]);
+    }
     return (
         <form className="text-black bg-grey flex flex-col gap-2">
+            <div>
+                <div className="flex gap-2">{tagDisplay}</div>
+                Add tags{" "}
+                {tagArray.map((tag, index) => {
+                    return (
+                        <WorkoutTag
+                            text={tag}
+                            index={index}
+                            addTagToArray={addTagToArray}
+                        />
+                    );
+                })}
+            </div>
             <FormControl>
                 <TextField
                     onChange={(e) => {
@@ -97,6 +143,17 @@ const CreateWorkout = ({ dateInfo }: ICreateWorkout) => {
                 </button>
             </h3>
             {exerciseDisplay}
+            {/* <Button onClick={() => setOpenCreate(false)}>Cancel</Button> */}
+            <div>
+                <Button
+                    onClick={() => {
+                        console.log({ date, exercises, type, setting, start });
+                    }}
+                >
+                    Create
+                </Button>
+                <Button>Start Now</Button>
+            </div>
         </form>
     );
 };
