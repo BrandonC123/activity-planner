@@ -1,0 +1,14 @@
+GET http://localhost:8080/api/workouts
+
+###
+POST http://localhost:8080/api/workouts
+Content-Type: application/json
+
+{
+    "exercises": [{"name": "Lateral Raise", "sets": 3, "reps": 8, "weight": [1, 2, 3], "dropset": false}],
+    "date": "1/23/2023",
+    "type": "Cardio",
+    "setting": "Gym",
+    "tags": ["test", "test"]
+}
+
