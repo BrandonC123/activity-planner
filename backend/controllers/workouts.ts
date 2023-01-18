@@ -17,8 +17,14 @@ workoutsRouter.post("/", async (request, response) => {
 });
 
 workoutsRouter.get("/", async (request, response) => {
-    const allWorkouts = await Workout.find({})
-    response.json(allWorkouts)
-})
+    const allWorkouts = await Workout.find({});
+    response.json(allWorkouts);
+});
+
+workoutsRouter.get("/:id", async (request, response) => {
+    const id = request.params.id;
+    const workout = await Workout.findById(id);
+    response.json(workout);
+});
 
 export default workoutsRouter;

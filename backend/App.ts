@@ -11,7 +11,11 @@ import workoutsRouter from "./controllers/workouts";
 
 app.use(express.json());
 app.use("/api/workouts", workoutsRouter);
-app.use(cors());
+app.use(
+    cors({
+        origin: true,
+    })
+);
 
 mongoose1
     .connect(config.MONGODB_URI)
