@@ -9,10 +9,12 @@ const middleware = require("./utils/middleware");
 const config = require("./utils/config");
 import workoutsRouter from "./controllers/workouts";
 import userRouter from "./controllers/user";
+import loginRouter from "./controllers/login";
 
 app.use(express.json());
 app.use("/api/workouts", workoutsRouter);
 app.use("/api/users", userRouter);
+app.use("/api/login", loginRouter);
 app.use(
     cors({
         origin: true,
