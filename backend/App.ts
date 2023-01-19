@@ -8,9 +8,11 @@ const mongoose1 = require("mongoose");
 const middleware = require("./utils/middleware");
 const config = require("./utils/config");
 import workoutsRouter from "./controllers/workouts";
+import userRouter from "./controllers/user";
 
 app.use(express.json());
 app.use("/api/workouts", workoutsRouter);
+app.use("/api/users", userRouter);
 app.use(
     cors({
         origin: true,
