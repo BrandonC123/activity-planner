@@ -12,7 +12,7 @@ import {
 } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import Home from "./pages/Home";
-import Test from "./pages/Test";
+import { UserProvider } from "./context/Context";
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
@@ -28,7 +28,9 @@ const router = createBrowserRouter([
 
 root.render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <UserProvider>
+            <RouterProvider router={router} />
+        </UserProvider>
     </React.StrictMode>
 );
 

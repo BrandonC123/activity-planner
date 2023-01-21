@@ -1,3 +1,4 @@
+import { useEffect, useReducer, useContext } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import {
     Button,
@@ -8,9 +9,14 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import UserService from "../services/UserService";
+import { UserContext } from "../context/Context";
 
 const UnauthenticatedHome = () => {
+    const { state, dispatch } = useContext(UserContext);
     const [openLogin, setOpenLogin] = useState(false);
+    const [email, setEmail] = useState<string>("brandon@gmail.com");
+    const [password, setPassword] = useState<string>("brandonspassword");
     return (
         <div className="bg-landing-page w-full h-screen bg-center bg-no-repeat bg-black opacity-80">
             <header className="bg-transparent w-screen absolute p-4">
@@ -51,6 +57,10 @@ const UnauthenticatedHome = () => {
                     <span className="text-3xl">Login</span>
                     <form>
                         <TextField
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                            }}
                             autoFocus
                             margin="dense"
                             id="name"
@@ -60,7 +70,10 @@ const UnauthenticatedHome = () => {
                             variant="standard"
                         />
                         <TextField
-                            autoFocus
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                            }}
                             margin="dense"
                             id="password"
                             label="Password"
@@ -72,7 +85,17 @@ const UnauthenticatedHome = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenLogin(false)}>Close</Button>
-                    <Button>Login</Button>
+                    <Button
+                        onClick={() => {
+                            UserService.loginUser(email, password);
+                            dispatch({
+                                type: "update user status",
+                                payload: true,
+                            });
+                        }}
+                    >
+                        Login
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>
