@@ -3,7 +3,13 @@ const userRouter = require("express").Router();
 import User from "../models/user";
 
 userRouter.get("/", async (request, response) => {
-    const users = await User.find({});
+    const users = await User.find({}).populate("workouts", {
+        date: 1,
+        type: 1,
+        setting: 1,
+        exercises: 1,
+        tags: 1,
+    });
     response.json(users);
 });
 

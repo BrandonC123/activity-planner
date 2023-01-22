@@ -1,7 +1,11 @@
 GET http://localhost:8080/api/workouts
 
 ###
+GET http://localhost:8080/api/workouts/63c75065848cdda65cf336d2
+
+###
 POST http://localhost:8080/api/workouts
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImJyYW5kb25AZ21haWwuY29tIiwiaWQiOiI2M2M4Y2Y3N2UxMGQxZjk4MmZhYjg1N2UiLCJpYXQiOjE2NzQzNzUxNzR9.9lEaT8s2G189HhgFYhANdSeHRD9veMV02ifvE9TyUpY
 Content-Type: application/json
 
 {
