@@ -1,14 +1,19 @@
 import { createContext, useReducer } from "react";
+import { IUserData } from "../interfaces/IUserData";
 import { IWorkout } from "../interfaces/IWorkout";
 import UserReducer from "./Reducer";
 
 interface InitialUserData {
-    token: string;
+    userData: IUserData;
     workouts: IWorkout[];
     signedIn: boolean;
 }
 const initialUserData = {
-    token: "",
+    userData: {
+        token: "",
+        email: "",
+        name: "",
+    },
     workouts: [],
     signedIn: false,
 };

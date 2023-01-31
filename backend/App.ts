@@ -12,14 +12,10 @@ import userRouter from "./controllers/user";
 import loginRouter from "./controllers/login";
 
 app.use(express.json());
+app.use(cors());
 app.use("/api/workouts", workoutsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
-app.use(
-    cors({
-        origin: true,
-    })
-);
 
 mongoose1
     .connect(config.MONGODB_URI)
