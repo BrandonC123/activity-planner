@@ -15,7 +15,7 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
     const [finished, setFinished] = useState<boolean>(false);
     const [nameIndex, setNameIndex] = useState<string>("");
     const [sets, setSets] = useState<number>(1);
-    const [reps, setReps] = useState<number>(1);
+    const [reps, setReps] = useState<number[]>([1]);
     const [weight, setWeight] = useState<number[]>([1]);
     const [dropset, setDropset] = useState<boolean>(false);
     const exerciseArray: string[] = [
@@ -36,6 +36,25 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                 </MenuItem>
             );
         });
+    }
+    function toggleSets(e: React.ChangeEvent<HTMLInputElement>) {
+        const tempSets: number = Number.parseInt(e.target.value);
+        setSets(tempSets);
+        let tempWeight: number[] = Array.from(weight);
+        let tempReps: number[] = Array.from(reps);
+        if (tempSets < weight.length) {
+            tempWeight.splice(tempSets);
+            setWeight(tempWeight);
+            tempReps.splice(tempSets);
+            setReps(tempReps);
+            return;
+        }
+        for (let i = weight.length; i < tempSets; i++) {
+            tempWeight.push(1);
+            tempReps.push(1);
+        }
+        setWeight(tempWeight);
+        setReps(tempReps);
     }
 
     return !finished ? (
@@ -62,21 +81,10 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                             type={"number"}
                             label="Sets"
                             value={sets}
-                            onChange={(e) => {
-                                const tempSets: number = Number.parseInt(
-                                    e.target.value
-                                );
-                                setSets(tempSets);
-                                let temp: number[] = Array.from(weight);
-                                if (tempSets < weight.length) {
-                                    temp.splice(tempSets);
-                                    setWeight(temp);
-                                    return;
-                                }
-                                for (let i = weight.length; i < tempSets; i++) {
-                                    temp.push(1);
-                                }
-                                setWeight(temp);
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                                toggleSets(e);
                             }}
                             InputProps={{ inputProps: { min: 1 } }}
                         />
@@ -86,13 +94,12 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                             onChange={(
                                 e: React.ChangeEvent<HTMLInputElement>
                             ) => {
-                                setReps(Number.parseInt(e.target.value));
+                                setDropset(e.target.checked);
                             }}
-                            id="rep-count"
-                            type={"number"}
-                            value={reps}
-                            label="Reps"
-                            InputProps={{ inputProps: { min: 1 } }}
+                            id="dropset-status"
+                            type={"checkbox"}
+                            value={dropset}
+                            label="Dropset?"
                         />
                     </FormControl>
                 </div>
@@ -110,7 +117,7 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                                         setWeight(tempWeight);
                                     }}
                                     key={index}
-                                    id="weight"
+                                    id={`weight-${index}`}
                                     type={"number"}
                                     value={weight[index]}
                                     // Use +2 to account for initial set already in array
@@ -119,18 +126,27 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                             );
                         })}
                     </FormControl>
-                    <FormControl fullWidth>
-                        <TextField
-                            onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>
-                            ) => {
-                                setDropset(e.target.checked);
-                            }}
-                            id="dropset-status"
-                            type={"checkbox"}
-                            value={dropset}
-                            label="Dropset?"
-                        />
+                    <FormControl className="flex flex-col gap-2" fullWidth>
+                        {weight.map((set, index) => {
+                            return (
+                                <TextField
+                                    onChange={(e) => {
+                                        let tempReps: number[] =
+                                            Array.from(weight);
+                                        tempReps[index] = Number.parseInt(
+                                            e.target.value
+                                        );
+                                        setReps(tempReps);
+                                    }}
+                                    key={index}
+                                    id={`reps-${index}`}
+                                    type={"number"}
+                                    value={reps[index]}
+                                    // Use +2 to account for initial set already in array
+                                    label={`Set ${index + 1} Reps`}
+                                />
+                            );
+                        })}
                     </FormControl>
                 </div>
             </div>
@@ -160,6 +176,7 @@ const AddExercise = ({ addExercise }: IAddExercise) => {
                 {sets} Reps: {reps}
                 Weight: {weight} Dropset: {dropset}
             </p>
+            <Button onClick={() => setFinished(false)}>Edit</Button>
         </div>
     );
 };
